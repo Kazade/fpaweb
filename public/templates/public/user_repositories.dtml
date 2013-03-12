@@ -1,10 +1,14 @@
 {% extends "public/base.dtml" %}
 
-{% block "content" %}
+{% block content %}
+
+{% if user == request.user %}
+    <input type="button">Create Repository</input>
+{% endif %}
 
 {% for repository in repositories %}
     <div>
-        <a href="{% url "public_view_repository" repository_id=repository.pk %}">{{repository.name}}</a>
+        <a href="{% url "public_view_repository" repository_id=repository.pk username=repository.owner.username %}">{{repository}}</a>
     </div>
 {% endfor %}
 
