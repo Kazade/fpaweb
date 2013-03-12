@@ -1,0 +1,37 @@
+
+<html>
+<head>
+    <script type="text/javascript" src="/static/js/jquery/1.8/jquery-1.8.1.js"></script>
+    <script type="text/javascript" src="/static/js/underscore.js"></script>
+    <script type="text/javascript" src="/static/js/backbone.js"></script>
+    
+    <script type="text/javascript">
+        $(function() {
+            Backbone.history.start({pushState: true});
+            
+            var tokenValue = $('input[name=csrfmiddlewaretoken]').val();
+            var oldSync = Backbone.sync;
+            Backbone.sync = function(method, model, options){
+                options.beforeSend = function(xhr){
+                    xhr.setRequestHeader('X-CSRFToken', tokenValue);
+                };
+                return oldSync(method, model, options);
+            };
+        });
+        
+        Repository = Backbone.Model.extend({urlRoot: '/api/repositories/'});
+        
+    </script>
+    
+    <title>Fedora Package Archive: {{title}}</title>
+</head>
+<body>
+    {% csrf_token %}
+
+    <div id="content">
+    {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>
+

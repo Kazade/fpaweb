@@ -1,0 +1,22 @@
+{% extends "public/base.dtml" %}
+
+{% block content %}
+    <h1> Create a repository </h1>
+    <p>
+        Here you can create a repository to hold your packages. 
+        Each repository you create should fulfil a specific purpose, 
+        (e.g. don't just dump a load of unrelated packages in one repository)        
+    </p>
+    
+    <p>
+        <a href="{% url "public_user_repositories" username=request.user.username %}">
+            Return to your repositories
+        </a>
+    </p>    
+    <table>
+    {{form.as_table}}
+    </table>
+    <div id="action_row">
+        <input type="submit" value="Create" />
+    </div>
+{% endblock %}
