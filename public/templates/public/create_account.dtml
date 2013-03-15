@@ -1,0 +1,14 @@
+{% extends "public/fancybox_base.dtml" %}
+
+{% block content %}
+<ul id="error_list"></ul>
+<form method="post" action="{% url "public_create_account" %}"  id="fancybox_form">
+{% csrf_token %}
+
+{% include "public/inc/form.dtml" %}
+
+<div>
+<input class="btn btn-primary pull-right" type="submit" value="Create account" />
+</div>
+</form>
+{% endblock %}

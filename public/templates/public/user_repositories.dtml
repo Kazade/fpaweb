@@ -1,15 +1,30 @@
 {% extends "public/base.dtml" %}
 
 {% block content %}
-
-{% if user == request.user %}
-    <input type="button">Create Repository</input>
+<div class="row">
+<div class="span12">
+<h1>{{owner}}'s Repositories</h1>
+</div>
+</div>
+<div class="row">
+<div class="span12">
+{% if owner == user %}
+    <a class="fancybox btn btn-success" href="{% url "public_create_repository" username=user.username %}">Create Repository</a>
 {% endif %}
+</div>
+</div>
 
 {% for repository in repositories %}
-    <div>
+    <div class="row">
+    <div class="span8">
         <a href="{% url "public_view_repository" repository_id=repository.pk username=repository.owner.username %}">{{repository}}</a>
     </div>
+    </div>
 {% endfor %}
+{% if not repositories %}
+<div class="row">
+<div class="span12">You have no repositories</div>
+</div>
+{% endif %}
 
 {% endblock %}

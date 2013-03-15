@@ -1,0 +1,36 @@
+
+body {
+    font-family: Ubuntu, Arial, sans-serif;
+    margin-top: 10px;
+}
+
+#fancybox_content {
+    max-width: 600px;
+    max-height: 450px;
+    padding: 0px;
+    margin: 5px;
+}
+
+#action_row {
+    text-align: right;
+}
+
+.error_message {
+    font-size: 80%;
+    color: red;
+    padding-top: 0px;
+    margin-top: -5px;
+}
+
+#fancybox_content form {
+    max-width: 600px;
+}
+
+#fancybox_content form .help_text_icon {
+    margin-left: 5px;
+    margin-top: 8px;
+}
+
+#fancybox_form .help_text {
+    display: none;
+}

@@ -1,32 +1,84 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from public.forms import CreateRepositoryForm
+from public.forms import CreateRepositoryForm, LoginForm, CreateAccountForm
 from django.contrib.auth.models import User
 
 from core.models import Repository
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect
+from django.http import HttpResponse
+import json
+
+class HttpJSONResponse(HttpResponse):
+    def __init__(self, data):
+        serialized = json.dumps(data)
+        super(HttpJSONResponse, self).__init__(serialized, content_type="application/json")
 
 def main(request):
     return render_to_response("public/main.dtml", {}, context_instance=RequestContext(request))
 
+def create_account(request):
+    if request.method == "POST":
+        result = {
+            "status" : "success",
+            "messages" : []
+        }
+        
+        form = CreateAccountForm(request.POST)
+        if form.is_valid():
+            instance = form.save()            
+        else:
+            result["status"] = "failed"
+            result["messages"] = form.errors
+
+        return HttpJSONResponse(result)
+    else:
+        form = CreateAccountForm()
+        
+    subs = {
+        "form" : form
+    }        
+    
+    return render_to_response("public/create_account.dtml", subs, context_instance=RequestContext(request))
+    
+
 def login_view(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect("public_user_repositories", username=user.username)
+        result = {
+            'status' : 'success',
+            'messages' : []
+        }
+
+        form = LoginForm(request.POST)
+        
+        if form.is_valid():               
+            username_or_email = form.cleaned_data['username_or_email']            
+            password = form.cleaned_data['password']
+            user = authenticate(username=username_or_email, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)                    
+                else:
+                    result['status'] = 'failed'
+                    result['messages'] = [ "Your account has been disabled" ]
             else:
-                # Return a 'disabled account' error message
-                pass
+                # Return an 'invalid login' error message.
+                result['status'] = 'failed'
+                result['messages'] = [ "Invalid username and/or password" ]
         else:
-            # Return an 'invalid login' error message.
-            pass
+            result['status'] = 'failed'
+            result['messages'] = form.errors
+
+        return HttpJSONResponse(result)                
     else:
-        return render_to_response("public/login.dtml", subs, request_context=RequestContext(request))
+        form = LoginForm()
+        
+    subs = {
+        'form' : form
+    }
+    
+    return render_to_response("public/login.dtml", subs, context_instance=RequestContext(request))
 
 def logout_view(request):
     logout(request)
@@ -64,7 +116,7 @@ def user_repositories(request, username):
     repositories = user.repositories.all()
     subs = {
         "repositories" : repositories,
-        "user" : user
+        "owner" : user
     } 
     
     return render_to_response("public/user_repositories.dtml", subs, context_instance=RequestContext(request))

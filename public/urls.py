@@ -4,8 +4,9 @@ from django.conf.urls import patterns, url
 from django.conf.urls import include
 
 urlpatterns = patterns('public.views',    
-    url(r'login/$', 'login', name="public_login"),
-    url(r'logout/$', 'logout', name="public_logout"),
+    url(r'login/$', 'login_view', name="public_login"),
+    url(r'logout/$', 'logout_view', name="public_logout"),
+    url(r'create_account/$', 'create_account', name="public_create_account"),
     url(r'(?P<username>[a-zA-Z0-9]+)/repositories/create/$', 'create_repository', name="public_create_repository"),
     url(r'(?P<username>[a-zA-Z0-9]+)/repositories/$', 'user_repositories', name="public_user_repositories"),
     url(r'(?P<username>[a-zA-Z0-9]+)/repositories/(?P<repository_id>\d+)/$', 'view_repository', name="public_view_repository"),

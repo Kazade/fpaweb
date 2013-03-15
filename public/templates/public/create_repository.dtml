@@ -1,4 +1,4 @@
-{% extends "public/base.dtml" %}
+{% extends "public/fancybox_base.dtml" %}
 
 {% block content %}
     <h1> Create a repository </h1>
@@ -6,17 +6,10 @@
         Here you can create a repository to hold your packages. 
         Each repository you create should fulfil a specific purpose, 
         (e.g. don't just dump a load of unrelated packages in one repository)        
-    </p>
-    
-    <p>
-        <a href="{% url "public_user_repositories" username=request.user.username %}">
-            Return to your repositories
-        </a>
-    </p>    
-    <table>
-    {{form.as_table}}
-    </table>
-    <div id="action_row">
-        <input type="submit" value="Create" />
-    </div>
+    </p>   
+    <form method="post" action="{% url "public_create_repository" username=user.username %}">
+    {% csrf_token %}
+    {% include "public/inc/form.dtml" %}
+    <input type="submit" value="Create" class="btn btn-success pull-right" />
+    </form>
 {% endblock %}
