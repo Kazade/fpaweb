@@ -9,21 +9,38 @@
 <div class="row">
 <div class="span12">
 {% if owner == user %}
-    <a class="fancybox btn btn-success" href="{% url "public_create_repository" username=user.username %}">Create Repository</a>
+    <a class="fancybox btn btn-success pull-right" href="{% url "public_create_repository" username=user.username %}">Create Repository</a>
 {% endif %}
 </div>
 </div>
 
+<table class="table top-buffer">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Available Packages</th>
+    </tr>
 {% for repository in repositories %}
-    <div class="row">
-    <div class="span8">
+    <tr>
+    
+    <td>
         <a href="{% url "public_view_repository" repository_id=repository.pk username=repository.owner.username %}">{{repository}}</a>
-    </div>
-    </div>
+    </td>
+    <td>{{repository.description}}</td>
+    <td>
+        {{repository.packages|length}}
+    </td>
+    
+    </tr>
 {% endfor %}
+</table>
+
 {% if not repositories %}
 <div class="row">
-<div class="span12">You have no repositories</div>
+<div class="span12">
+<br/>
+<p>You have no repositories</p>
+</div>
 </div>
 {% endif %}
 

@@ -30,6 +30,10 @@ class CreateRepositoryForm(forms.ModelForm):
     class Meta:
         model = Repository
         
+        widgets = {
+            'description': forms.Textarea(attrs={'class' : 'input-block-level', 'rows' : 2})
+        }
+        
     def __init__(self, request, *args, **kwargs):
         self.request = request        
         super(CreateRepositoryForm, self).__init__(*args, **kwargs)        

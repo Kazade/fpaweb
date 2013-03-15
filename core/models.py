@@ -3,6 +3,8 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
+from core.middleware import get_request
+
 BUILD_STATUS_CHOICES = [
     ("queued", _("Queued")),
     ("building", _("Building")),
@@ -28,13 +30,19 @@ class DistroVersion(models.Model):
 class Repository(models.Model):
     name = models.CharField(max_length=512, unique=True, db_index=True)
     owner = models.ForeignKey(User, editable=False, related_name="repositories")
-    description = models.TextField()
+    description = models.TextField()   
     
     class Meta:
         verbose_name_plural = "repositories"
 
     def __unicode__(self):
         return self.name
+        
+    def save(self, *args, **kwargs):
+        if not self.pk and not self.owner_id:
+            self.owner = get_request().user
+            assert self.owner
+        return super(Repository, self).save(*args, **kwargs)
 
 class Package(models.Model):
     name = models.CharField(max_length=64, db_index=True) #What are the Fedora restrictions on name?

@@ -34,3 +34,5 @@ body {
 #fancybox_form .help_text {
     display: none;
 }
+
+.top-buffer { margin-top:20px; }
